@@ -15,6 +15,7 @@
 #include <vector>
 #include <sstream>
 #include <cstring>
+#include <memory>
 #include <sqlite/sqlite3.h>
 #include <vfs/gdsqlite_vfs.h>
 
@@ -40,6 +41,7 @@ namespace godot
         bool validate_json(const Array &import_json, std::vector<object_struct> &tables_to_import);
 
         sqlite3 *db;
+        std::vector<std::unique_ptr<Callable>> function_registry;
 
         int64_t verbosity_level = 1;
         bool foreign_keys = false;
@@ -80,6 +82,8 @@ namespace godot
         Array select_rows(const String &p_name, const String &p_conditions, const Array &p_columns_array);
         bool update_rows(const String &p_name, const String &p_conditions, const Dictionary &p_updated_row_dict);
         bool delete_rows(const String &p_name, const String &p_conditions);
+
+        bool create_function(const String &p_name, const Callable &p_callable, int p_argc);
 
         bool import_from_json(String import_path);
         bool export_to_json(String export_path);
